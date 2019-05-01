@@ -1,0 +1,17 @@
+- name: Initialize the cluster and add the nodes to the cluster
+  hosts: couchbase-main
+  become: yes
+  tasks:
+  - name: Configure main node
+    shell: /opt/couchbase/bin/couchbase-cli cluster-init --cluster 127.0.0.1:8091 --cluster-username <%=couchbase_username%> --cluster-password <%=couchbase_password%> --cluster-port=8091 --cluster-ramsize=<%=onprem_couchbase_ram%> --cluster-name piptemplates-cb --services data,index,query,fts
+  
+  - name: add nodes
+    shell: /opt/couchbase/bin/couchbase-cli server-add -c 127.0.0.1:8091 -u <%=couchbase_username%> -p <%=couchbase_password%> --server-add {{ item }}:8091 --server-add-username <%=couchbase_username%> --server-add-password <%=couchbase_password%>
+    with_items: 
+      <%=onprem_couchbase_nodes_private_ips%>
+
+  - name: Rebalance the cluster
+    shell: /opt/couchbase/bin/couchbase-cli rebalance -c 127.0.0.1:8091 -u <%=couchbase_username%> -p <%=couchbase_password%>      
+  
+  - name: create bucket <%=onprem_couchbase_bucket_name%> with <%=onprem_couchbase_bucket_replicas%> replicas
+    shell: /opt/couchbase/bin/couchbase-cli bucket-create -c 127.0.0.1:8091 --bucket=<%=onprem_couchbase_bucket_name%> --bucket-type=couchbase --bucket-ramsize=<%=onprem_couchbase_bucket_ram%> --bucket-replica=<%=onprem_couchbase_bucket_replicas%> -u <%=couchbase_username%> -p <%=couchbase_password%>

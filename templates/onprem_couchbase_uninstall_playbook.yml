@@ -1,0 +1,8 @@
+- name: Couchbase Uninstallation
+  hosts: all
+  become: yes
+   
+  tasks:
+  - name: Uninstall Couchbase
+    shell: dpkg -r couchbase-server
+    

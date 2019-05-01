@@ -1,0 +1,16 @@
+- name: Couchbase Installation
+  hosts: all
+  become: yes
+   
+  tasks:
+  - name: download Couchbase package
+    get_url: url=http://packages.couchbase.com/releases/couchbase-release/couchbase-release-1.0-4-amd64.deb dest=~/.
+
+  - name: Install Couchbase .deb file on all machines
+    shell: dpkg -i ~/couchbase-release-1.0-4-amd64.deb
+
+  - name: download Couchbase server package
+    get_url: url=https://packages.couchbase.com/releases/6.0.0/couchbase-server-community_6.0.0-ubuntu16.04_amd64.deb dest=~/.
+
+  - name: Install Couchbase server .deb file on all machines
+    raw: apt-get install ~/couchbase-server-community_6.0.0-ubuntu16.04_amd64.deb -y

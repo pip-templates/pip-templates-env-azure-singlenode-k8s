@@ -1,0 +1,33 @@
+{
+    "env_type": "on-premises",
+
+    "az_region": "eastus",
+    "az_resource_group": "piptemplates-stage-east-us",
+    "az_subscription": "piptemplates-DI",
+
+    "onprem_instance_username": "piptemplatesadmin",
+    "az_vm_ssh_keygen_enable": false,
+    "az_vm_ssh_public_key_path": "./config/id_rsa.pub",
+    "ssh_private_key_path": "./config/id_rsa",
+
+    "onprem_k8s_vm_vnet": "piptemplates-vm-vnet",
+    "onprem_k8s_vm_resources_prefix": "piptemplates-vm-k8s",
+    "onprem_k8s_vm_size": "Standard_DS1_v2",
+    "onprem_k8s_vm_count": 2,
+    "onprem_k8s_network": "10.244.0.0/16",
+    "onprem_kubernetes_cni_version": "0.6.0-00",
+    "onprem_kubelet_version": "1.10.13-00",
+    "onprem_kubeadm_version": "1.10.13-00",
+    "onprem_kubectl_version": "1.10.13-00",
+
+    "onprem_couchbase_vm_vnet": "piptemplates-vm-vnet",
+    "onprem_couchbase_vm_resources_prefix": "piptemplates-vm-cb",
+    "onprem_couchbase_vm_size": "Standard_DS1_v2",
+    "onprem_couchbase_vm_count": 2,
+    "couchbase_username": "piptemplatesadmin",
+    "couchbase_password": "piptemplatesadmin2019#",
+    "onprem_couchbase_ram": 512,
+    "onprem_couchbase_bucket_name": "default",
+    "onprem_couchbase_bucket_ram": 256,
+    "onprem_couchbase_bucket_replicas": 1
+}
