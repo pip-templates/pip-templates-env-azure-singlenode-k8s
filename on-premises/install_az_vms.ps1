@@ -71,8 +71,6 @@ $sshPubKey = Get-Content -Path $sshPath
 $sshPubKey = $sshPubKey -replace "`t|`n|`r", ""
 
 $resources.k8s_worker_ips = @()
-$resources.cb_worker_ips = @()
-$resources.onprem_couchbase_nodes_private_ips = ""
 $resources.az_vm_public_key = $sshPubKey
 
 # Create k8s instances
@@ -135,70 +133,6 @@ for ($i = 0; $i -lt $config.onprem_k8s_vm_count; $i++) {
     # if ($out -ne $null) {
     #     Write-Host "NSG rule for vm #$i to access port 8111 created."
     # }
-}
-
-# Create cb instances
-for ($i = 0; $i -lt $config.onprem_couchbase_vm_count; $i++) {
-    # Create azure resources
-    Write-Host "Creating virtual machine #$i for couchbase cluster, network security group and public ip..."
-
-    # incremental number for az resource name. and set variables used in az_vm_params template
-    $resources.az_vm_number = $i
-    $resources.az_vm_resources_prefix = $config.onprem_couchbase_vm_resources_prefix
-    $resources.az_vm_vnet = $config.onprem_couchbase_vm_vnet
-    $resources.az_vm_size = $config.onprem_couchbase_vm_size
-
-    Build-EnvTemplate -InputPath "$($path)/../templates/az_vm_params.json" `
-        -OutputPath "$($path)/../temp/az_vm_params$i.json" -Params1 $config -Params2 $resources
-
-    $deploymentName = "$($resources.az_vm_resources_prefix)$i-deployment"
-    $out = az group deployment create --name $deploymentName `
-        --resource-group $config.az_resource_group `
-        --template-file "$($path)/../templates/az_vm_deploy.json" `
-        --parameters "$($path)/../temp/az_vm_params$i.json" | Out-String | ConvertFrom-Json | ConvertObjectToHashtable
-
-    if ($out -eq $null) {
-        Write-Host "Can't deploy VM."
-        return
-    }
-    else {
-        if ($LastExitCode -eq 0) {
-            Write-Host "VM deployment '$($out.name)' has been successfully deployed."
-        }
-    }
-
-    # Write first vm as master and all others and workers nodes
-    if ($i -eq 0) {
-        $out = az network public-ip show -g $config.az_resource_group `
-            -n "$($resources.az_vm_resources_prefix)$i-ip" | Out-String | ConvertFrom-Json | ConvertObjectToHashtable
-
-        $resources.cb_master_ip = $out.ipAddress
-    }
-    else {
-        $out = az network public-ip show -g $config.az_resource_group `
-            -n "$($resources.az_vm_resources_prefix)$i-ip" | Out-String | ConvertFrom-Json | ConvertObjectToHashtable
-
-        $resources.cb_worker_ips += $out.ipAddress
-
-        # Write private vm ips (for couchbase cluster)
-        $out = az network nic ip-config list -g $config.az_resource_group `
-            --nic-name "$($resources.az_vm_resources_prefix)$i-nic" `
-            | Out-String | ConvertFrom-Json | ConvertObjectToHashtable
-
-        $resources.onprem_couchbase_nodes_private_ips += "- $($out[0].privateIpAddress)`n      "
-    }
-
-    # Open couchbase dashboard port
-    Write-Host "Opening port 8091(couchbase dashboard) on vm #$i..."
-    $out = az network nsg rule create -g $config.az_resource_group `
-        --nsg-name "$($resources.az_vm_resources_prefix)$i-nsg" `
-        --name "cb_8091" `
-        --priority 100 `
-        --destination-port-ranges 8091 
-
-    if ($out -ne $null) {
-        Write-Host "NSG rule for vm #$i to access port 8091 created."
-    }
 }
 
 # Write resources

@@ -20,7 +20,6 @@
         - { src: '../templates/k8s_components/logging.yml', dest: '$HOME/k8s_platform_services/logging.yml' }
         - { src: '../templates/k8s_components/metrics.yml', dest: '$HOME/k8s_platform_services/metrics.yml' }
         - { src: './sgw-config.json', dest: '$HOME/k8s_platform_services/sgw-config.json' }
-        - { src: './cb-sgw.yml', dest: '$HOME/k8s_platform_services/cb-sgw.yml' }
 
     - name: Install nginx ingress components
       become: yes
@@ -56,13 +55,3 @@
       become: yes
       become_user: <%=onprem_instance_username%>
       raw: kubectl apply -f "$HOME/k8s_platform_services/metrics.yml"
-
-    - name: Create cb sgw secret
-      become: yes
-      become_user: <%=onprem_instance_username%>
-      raw: kubectl create secret generic cb-sgw-config --from-file "$HOME/k8s_platform_services/sgw-config.json" --namespace piptemplates
-
-    - name: Create cb sgw
-      become: yes
-      become_user: <%=onprem_instance_username%>
-      raw: kubectl apply -f "$HOME/k8s_platform_services/cb-sgw.yml"

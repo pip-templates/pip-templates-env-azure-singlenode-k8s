@@ -36,10 +36,6 @@ Set-Content -Path "$path/../temp/onprem_k8s_ansible_hosts" -Value $ansible_inven
 Build-EnvTemplate -InputPath "$($path)/../templates/ssh_keyscan_playbook.yml" -OutputPath "$($path)/../temp/ssh_keyscan_playbook.yml" -Params1 $config -Params2 $resources
 ansible-playbook -i "$path/../temp/onprem_k8s_ansible_hosts" "$path/../temp/ssh_keyscan_playbook.yml"
 
-# prepare cb sgw deploy files
-Build-EnvTemplate -InputPath "$($path)/../templates/k8s_components/cb-sgw-config.$($config.env_type).json" -OutputPath "$($path)/../temp/sgw-config.json" -Params1 $config -Params2 $resources
-Build-EnvTemplate -InputPath "$($path)/../templates/k8s_components/cb-sgw.yml" -OutputPath "$($path)/../temp/cb-sgw.yml" -Params1 $config -Params2 $resources
-
 # Install platform services
 Build-EnvTemplate -InputPath "$($path)/../templates/onprem_destroy_platform_services_playbook.yml" -OutputPath "$($path)/../temp/onprem_destroy_platform_services_playbook.yml" -Params1 $config -Params2 $resources
 ansible-playbook -i "$path/../temp/onprem_k8s_ansible_hosts" "$path/../temp/onprem_destroy_platform_services_playbook.yml"
