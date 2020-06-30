@@ -121,18 +121,6 @@ for ($i = 0; $i -lt $config.onprem_k8s_vm_count; $i++) {
 
         $resources.k8s_worker_ips += $out.ipAddress
     }
-
-    # # Open teamcity server port
-    # Write-Host "Opening port 8111(teamcity server) on vm #$i..."
-    # $out = az network nsg rule create -g $config.az_resource_group `
-    #     --nsg-name "$($resources.az_vm_resources_prefix)$i-nsg" `
-    #     --name "teamcity" `
-    #     --priority 101 `
-    #     --destination-port-ranges 8111 
-
-    # if ($out -ne $null) {
-    #     Write-Host "NSG rule for vm #$i to access port 8111 created."
-    # }
 }
 
 # Write resources

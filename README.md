@@ -6,6 +6,8 @@ Scriptable environments introduce “infrastructure as a code” into devops pra
 * Minimize differences between environments
 * Provide developers with environment to run and test their components integrated into the final system and expand their area of responsibilities
 
+For demo purposes azure VMs used as simulatung on-premises environment. If you want to use these project with real hardware machines remove azure related code from project.
+
 # Syntax
 All sripts have one required paramenter - *$ConfigPath*. This is the path to config, path can be absolute or relative. 
 
@@ -45,14 +47,6 @@ If you have any problem with not installed tools - use `install_prereq_` script 
 | Temp | Folder for storing automaticaly created temporary files. | 
 | Templates | Folder for storing templates, such as kubernetes yml files, az resource manager json files, ansible playbooks, etc. | 
 | Test | Script for testing created environment using ansible and comparing results to expected values. | 
-
-# Environment types
-There are 3 types of enviroment: 
-
-* Cloud - resources created by azure resource manager, use azure kubernetes services (AKS) for deploying kubernetes cluster, etc.
-* On premises - use existing instances and via ansible install kubernetes cluster using kubeadm. Also created install azure virtual machines script to simulate existing instances.
-* Local - use minikube to install kubernetes cluster. 
-
 
 ### On premises environment
 
