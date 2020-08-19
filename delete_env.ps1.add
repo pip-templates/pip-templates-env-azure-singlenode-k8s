@@ -1,0 +1,10 @@
+# Delete k8s environment
+switch ($config.env_type) {
+    "on-premises" { 
+        . "$($rootPath)/src/destroy_k8s.ps1" $ConfigPath
+        . "$($rootPath)/src/destroy_az_vms.ps1" $ConfigPath
+     }
+    Default {
+        Write-Host "Platform type not specified in config file. Please add 'env_type' to config."
+    }
+}

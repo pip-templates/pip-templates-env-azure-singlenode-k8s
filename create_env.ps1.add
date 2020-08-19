@@ -1,0 +1,11 @@
+# Create k8s environment
+switch ($config.env_type) {
+    "on-premises" { 
+        . "$($rootPath)/src/install_az_vms.ps1" $ConfigPath
+        . "$($rootPath)/src/install_k8s.ps1" $ConfigPath
+        . "$($rootPath)/src/install_platform_services.ps1" $ConfigPath
+     }
+     Default {
+         Write-Host "Platform type not specified in config file. Please add 'env_type' to config."
+     }
+}

@@ -1,56 +1,18 @@
 # Overview
-Scriptable environments introduce “infrastructure as a code” into devops practices. They allow to:
 
-* Have controllable and verifiable environment structure
-* Quickly spin up fully-functional environments in minutes
-* Minimize differences between environments
-* Provide developers with environment to run and test their components integrated into the final system and expand their area of responsibilities
+This is a built-in module to environment [pip-templates-env-master](https://github.com/pip-templates/pip-templates-env-master). 
+This module stores scripts for management azure single node kubernetes environment, also this module can be used for on-premises kubernetes environment.
 
-For demo purposes azure VMs used as simulatung on-premises environment. If you want to use these project with real hardware machines remove azure related code from project.
+# Usage
 
-# Syntax
-All sripts have one required paramenter - *$ConfigPath*. This is the path to config, path can be absolute or relative. 
+- Download this repository
+- Copy *src* and *templates* folder to master template
+- Add content of *.ps1.add* files to correspondent files from master template
+- Add content of *config/config.k8s.json.add* to json config file from master template and set the required values
 
-**Examples of installing privatek8s**
-Relative path example:
-`
-./on-premises/install_k8s.ps1 ./config/onprem_config.json
-`
-Absolute path example:
-`
-~/pip-templates-env-privatek8s/on-premises/install_k8s.ps1 ~/pip-templates-env-privatek8s/config/onprem_config.json
-`
+# Config parameters
 
-**Example delete script**
-`
-./on-premises/destroy_k8s.ps1 ./config/onprem_config.json
-`
-
-Also you can install environment using single script:
-`
-./create_env.ps1 ./config/onprem_config.json
-`
-
-Delete whole environment:
-`
-./delete_env.ps1 ./config/onprem_config.json
-`
-
-If you have any problem with not installed tools - use `install_prereq_` script for you type of operation system.
-
-# Project structure
-| Folder | Description |
-|----|----|
-| Config | Config files for scripts. Store *example* configs for each environment, recomendation is not change this files with actual values, set actual values in duplicate config files without *example* in name. Also stores *resources* files, created automaticaly. | 
-| Lib | Scripts with support functions like working with configs, templates etc. | 
-| On-premises | Scripts related to management on premises environment | 
-| Temp | Folder for storing automaticaly created temporary files. | 
-| Templates | Folder for storing templates, such as kubernetes yml files, az resource manager json files, ansible playbooks, etc. | 
-| Test | Script for testing created environment using ansible and comparing results to expected values. | 
-
-### On premises environment
-
-* On premises config parameters
+Config variables description
 
 | Variable | Default value | Description |
 |----|----|---|
@@ -73,9 +35,9 @@ If you have any problem with not installed tools - use `install_prereq_` script 
 | onprem_kubectl_version | 1.10.13-00 | Kubectl version to install |
 
 # Testing enviroment
-To test created environment after installation you can use script in *test* folder:
+To test created environment after installation you can use *test_instances.ps1* script:
 `
-./test/test_instances.ps1 ./config/test_config.json
+./src/test_instances.ps1 ./config/test_config.json
 `
 You have to create test config  before running *test_instances* script.
 * Test config parameters
